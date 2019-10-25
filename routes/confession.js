@@ -4,6 +4,18 @@ const { checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
 const Confession = require('../models/Confession');
 
+router.get('/home', (req, res, next) => {
+  Confession.find()
+    .then((confessions) => {
+      console.log(confessions);
+      return res.json(confessions);
+    })
+    .catch((err) => {
+      console.log('Error while displaying latest confessions', err);
+      next(err);
+    });
+});
+
 router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   const {
     description, date, category, isDestroyed
@@ -28,6 +40,18 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
     }
   }
 });
+
+router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
+  try {
+    const { _id } = req.session.currentUser;
+    const user = await User.findOne({ _id }).populate('userConfessions');
+    const confessions = user.userConfessions;
+    return res.json(confessions);
+  } catch (error) {
+    next(error);
+  }
+});
+
 
 module.exports = router;
 
