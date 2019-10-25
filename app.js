@@ -20,6 +20,7 @@ mongoose
   });
 
 const authRouter = require('./routes/auth');
+const confessionRouter = require('./routes/confession');
 
 const app = express();
 
@@ -57,6 +58,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/', authRouter);
+app.use('/', confessionRouter);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
