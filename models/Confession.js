@@ -8,7 +8,7 @@ const confessionSchema = new Schema(
     category: { type: String, required: true },
     isDestroyed: { type: Boolean, default: true },
     date: { type: Number },
-    user: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
   },
   {
     timestamps: {
