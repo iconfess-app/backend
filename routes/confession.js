@@ -4,31 +4,35 @@ const { checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
 const Confession = require('../models/Confession');
 
-router.get('/home', (req, res, next) => {
-  Confession.find()
-    .then((confessions) => {
-      console.log(confessions);
-      return res.json(confessions);
-    })
-    .catch((err) => {
-      console.log('Error while displaying latest confessions', err);
-      next(err);
-    });
+router.get('/home', async (req, res, next) => {
+  try {
+    const allConfessions = await Confession.find().populate('user');
+    return res.json(allConfessions);
+  } catch (error) {
+    next(error);
+  }
+
 });
 
 router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   const {
-    description, date, category, isDestroyed
+    description, category, isDestroyed
   } = req.body;
   const user = req.session.currentUser._id;
 
-  if (description === '' || date === '' || category === '') {
+  if (description === '' || category === '') {
     res.status(404).json({ code: 'Fill all fields before submitting' });
   } else {
     try {
+      // Això m'ho emportaré a un helper extern
+      var d = new Date();
+      var date = d.toJSON().slice(0, 10).replace(/-/g, '-');
+      var hours = d.getHours();
+      var minutes = d.getMinutes();
+      var time = `${hours}:${minutes}`;
       const newConfession = await Confession.create(
         {
-          description, date, category, isDestroyed, user,
+          description, date, time, category, isDestroyed, user,
         });
       const userUpdate = await User.findByIdAndUpdate(user, {
         $push: { userConfessions: newConfession._id },
@@ -51,7 +55,6 @@ router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
     next(error);
   }
 });
-
 
 module.exports = router;
 

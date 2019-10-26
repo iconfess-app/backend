@@ -1,12 +1,8 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
-
-const { checkUsernameAndPasswordNotEmpty } = require('../middlewares');
-
+const { checkUsernameAndPasswordNotEmpty, checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
-
 const bcryptSalt = 10;
-
 const router = express.Router();
 
 router.get('/me', (req, res, next) => {
@@ -43,9 +39,9 @@ router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) 
 });
 
 router.post('/login', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
-  const { username, password } = res.locals.auth;
+  const { email, password } = res.locals.auth;
   try {
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json({ code: 'not-found' });
     }
@@ -66,6 +62,28 @@ router.get('/logout', (req, res, next) => {
     }
     return res.status(204).send();
   });
+});
+
+router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
+  const {
+    username, password, email, age, allowsLocation, allowsContact, darkMode, avatar,
+  } = req.body;
+  const { _id } = req.session.currentUser;
+  try {
+    const user = await User.findByIdAndUpdate(_id, {
+      username,
+      password,
+      email,
+      age,
+      allowsLocation,
+      allowsContact,
+      darkMode,
+      avatar
+    }, { new: true });
+    req.session.currentUser = user;
+  } catch (error) {
+    next(error);
+  }
 });
 
 module.exports = router;
