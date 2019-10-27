@@ -2,14 +2,14 @@ const mongoose = require('mongoose');
 
 const { Schema } = mongoose;
 
-const confessionSchema = new Schema(
+const anonConfessionSchema = new Schema(
   {
     description: { type: String, required: true },
     category: { type: String, required: true },
     isDestroyed: { type: Boolean, default: true },
     date: { type: String },
     time: { type: String },
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    user: { type: String, default: 'Anonymous' },
     likesCounter: { type: Number, default: 0 },
   },
   {
@@ -20,6 +20,6 @@ const confessionSchema = new Schema(
   },
 );
 
-const Confession = mongoose.model('Confession', confessionSchema);
+const AnonymousConfession = mongoose.model('AnonymousConfession', anonConfessionSchema);
 
-module.exports = Confession;
+module.exports = AnonymousConfession;
