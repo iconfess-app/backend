@@ -7,7 +7,9 @@ const AnonymousConfession = require('../models/AnonymousConfession');
 
 router.get('/home', async (req, res, next) => {
   try {
-    const allConfessions = await Confession.find().populate('user');
+    const userConfessions = await Confession.find().populate('user');
+    const anonConfessions = await AnonymousConfession.find();
+    const allConfessions = [anonConfessions, userConfessions];
     return res.json(allConfessions);
   } catch (error) {
     next(error);
