@@ -60,7 +60,7 @@ router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, nex
   try {
     const { confessionId } = req.params;
     const confession = await Confession.findOne({ _id: confessionId }).populate('user');
-    res.json(confession);
+    return res.json(confession);
   } catch (error) {
     next(error);
   }
@@ -69,8 +69,8 @@ router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, nex
 router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
   try {
     const { confessionId } = req.params;
-    await Confession.deleteOne({ _id: confessionId });
-    res.status(200).json({ code: 'Confession deleted' });
+    const confession = await Confession.findByIdAndDelete({ _id: confessionId });
+    return res.status(200).json({ code: 'Confession deleted', confession });
   } catch (error) {
     next(error);
   }

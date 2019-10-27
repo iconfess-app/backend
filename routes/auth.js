@@ -67,20 +67,27 @@ router.get('/logout', (req, res, next) => {
 
 router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
   const {
-    newName, newPass, newMail, newAge, newAllowsLocation, newAllowsContact, newDarkMode, newAvatar,
+    username,
+    password,
+    email,
+    age,
+    allowsLocation,
+    allowsContact,
+    darkMode,
+    avatar,
   } = req.body;
   const { _id } = req.session.currentUser;
   try {
     const user = await User.findByIdAndUpdate(_id, {
-      username: newName,
-      password: newPass,
-      email: newMail,
-      age: newAge,
-      allowsLocation: newAllowsLocation,
-      allowsContact: newAllowsContact,
-      darkMode: newDarkMode,
-      avatar: newAvatar,
-    }, { new: true });
+      username,
+      password,
+      email,
+      age,
+      allowsLocation,
+      allowsContact,
+      darkMode,
+      avatar,
+    });
     req.session.currentUser = user;
     return res.json(user);
   } catch (error) {
