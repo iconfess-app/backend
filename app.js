@@ -11,7 +11,9 @@ require('dotenv').config();
 
 mongoose.set('useCreateIndex', true);
 mongoose
-  .connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO_URL, {
+    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
+  })
   .then(() => {
     console.log('connected to: ', process.env.MONGO_URL);
   })

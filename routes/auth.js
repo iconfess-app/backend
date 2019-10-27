@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const { checkUsernameAndPasswordNotEmpty, checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
+
 const bcryptSalt = 10;
 const router = express.Router();
 
@@ -15,7 +16,7 @@ router.get('/me', (req, res, next) => {
 
 router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
   const {
-    username, password, email, age, allowsLocation, allowsContact, darkMode, avatar,
+    username, password, email, isOver16, allowsLocation, allowsContact, darkMode, avatar,
   } = res.locals.auth;
   try {
     const user = await User.findOne({ username });
@@ -28,7 +29,7 @@ router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) 
 
     const newUser = await User.create(
       {
-        username, hashedPassword, email, age, allowsLocation, allowsContact, darkMode, avatar,
+        username, hashedPassword, email, isOver16, allowsLocation, allowsContact, darkMode, avatar,
       },
     );
     req.session.currentUser = newUser;
@@ -66,21 +67,22 @@ router.get('/logout', (req, res, next) => {
 
 router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
   const {
-    username, password, email, age, allowsLocation, allowsContact, darkMode, avatar,
+    newName, newPass, newMail, newAge, newAllowsLocation, newAllowsContact, newDarkMode, newAvatar,
   } = req.body;
   const { _id } = req.session.currentUser;
   try {
     const user = await User.findByIdAndUpdate(_id, {
-      username,
-      password,
-      email,
-      age,
-      allowsLocation,
-      allowsContact,
-      darkMode,
-      avatar
+      username: newName,
+      password: newPass,
+      email: newMail,
+      age: newAge,
+      allowsLocation: newAllowsLocation,
+      allowsContact: newAllowsContact,
+      darkMode: newDarkMode,
+      avatar: newAvatar,
     }, { new: true });
     req.session.currentUser = user;
+    return res.json(user);
   } catch (error) {
     next(error);
   }
