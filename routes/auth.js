@@ -95,4 +95,14 @@ router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
+router.delete('/delete', checkIfLoggedIn, async (req, res, next) => {
+  try {
+    const { _id } = req.session.currentUser;
+    const user = await User.findByIdAndRemove(_id);
+    return res.status(200).json({ code: 'User deleted', user });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
