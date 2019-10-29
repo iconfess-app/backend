@@ -16,7 +16,7 @@ router.get('/me', (req, res, next) => {
 
 router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
   const {
-    username, password, email, isOver16, allowsLocation, allowsContact, darkMode, avatar,
+    username, password, email, isOver16,
   } = res.locals.auth;
   try {
     const user = await User.findOne({ username });
@@ -29,7 +29,7 @@ router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) 
 
     const newUser = await User.create(
       {
-        username, hashedPassword, email, isOver16, allowsLocation, allowsContact, darkMode, avatar,
+        username, hashedPassword, email, isOver16,
       },
     );
     req.session.currentUser = newUser;
