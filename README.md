@@ -67,8 +67,8 @@ This project is designed as part of the last module's work at IronHack, which ai
 | Profile delete  | DELETE   | /delete                      | Delete a user's profile  |                  | /sign up      |
 | Confess          | POST   | /confess                       | Post a confession                     |    { description, category, isDestroyed }                                   |   /myconfessions              |
 | My confession           | GET    | /myconfessions/:confessionId               | Read confessions's information and delete it                        |                                       |                 |
-| Delete confession  | DELTE    | /myconfessions/:confessionId                | delete confession                   |                                       |                 |
-| 
+| Delete confession  | DELETE    | /myconfessions/:confessionId                | delete confession                   |                                       |                 |
+
 
 ## Models
 
