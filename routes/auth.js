@@ -17,44 +17,28 @@ router.get("/me", (req, res, next) => {
   }
 });
 
-router.post(
-  "/signup",
-  checkUsernameAndPasswordNotEmpty,
-  async (req, res, next) => {
-    const {
-      username,
-      password,
-      email,
-      isOver16,
-      allowsLocation,
-      allowsContact,
-      darkMode,
-      avatar
-    } = res.locals.auth;
-    try {
-      const user = await User.findOne({ username });
-      if (user) {
-        return res.status(422).json({ code: "username-not-unique" });
-      }
+router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
+  const {
+    username, password, email, isOver16,
+  } = res.locals.auth;
+  try {
+    const user = await User.findOne({ username });
+    if (user) {
+      return res.status(422).json({ code: 'username-not-unique' });
+    }
 
       const salt = bcrypt.genSaltSync(bcryptSalt);
       const hashedPassword = bcrypt.hashSync(password, salt);
 
-      const newUser = await User.create({
-        username,
-        hashedPassword,
-        email,
-        isOver16,
-        allowsLocation,
-        allowsContact,
-        darkMode,
-        avatar
-      });
-      req.session.currentUser = newUser;
-      return res.json(newUser);
-    } catch (error) {
-      next(error);
-    }
+    const newUser = await User.create(
+      {
+        username, hashedPassword, email, isOver16,
+      },
+    );
+    req.session.currentUser = newUser;
+    return res.json(newUser);
+  } catch (error) {
+    next(error);
   }
 );
 
@@ -113,6 +97,16 @@ router.put("/edit", checkIfLoggedIn, async (req, res, next) => {
     });
     req.session.currentUser = user;
     return res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.delete('/delete', checkIfLoggedIn, async (req, res, next) => {
+  try {
+    const { _id } = req.session.currentUser;
+    const user = await User.findByIdAndRemove(_id);
+    return res.status(200).json({ code: 'User deleted', user });
   } catch (error) {
     next(error);
   }

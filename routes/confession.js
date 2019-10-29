@@ -69,7 +69,12 @@ router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, nex
 router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
   try {
     const { confessionId } = req.params;
+    const { _id } = req.session.currentUser;
     const confession = await Confession.findByIdAndDelete({ _id: confessionId });
+    const userUpdate = await User.findByIdAndUpdate(_id, {
+      $pull: { userConfessions: confessionId },
+    }, { new: true });
+    req.session.currentUser = userUpdate;
     return res.status(200).json({ code: 'Confession deleted', confession });
   } catch (error) {
     next(error);
