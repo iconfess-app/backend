@@ -42,6 +42,22 @@ router.post('/signup', checkUsernameAndPasswordNotEmpty, async (req, res, next) 
   }
 });
 
+router.post('/updatepassword', checkIfLoggedIn, async (req, res, next) => {
+  const { password } = req.body;
+  const { _id } = req.session.currentUser;
+  try {
+    const salt = bcrypt.genSaltSync(bcryptSalt);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    const user = await User.findByIdAndUpdate(_id, {
+      hashedPassword,
+    });
+    req.session.currentUser = user;
+    return res.json(user);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.post('/login', checkUsernameAndPasswordNotEmpty, async (req, res, next) => {
   const { email, password } = res.locals.auth;
   try {
@@ -77,7 +93,7 @@ router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
     allowsLocation,
     allowsContact,
     darkMode,
-    avatar
+    avatar,
   } = req.body;
   const { _id } = req.session.currentUser;
   try {
@@ -89,8 +105,8 @@ router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
       allowsLocation,
       allowsContact,
       darkMode,
-      avatar
-    });
+      avatar,
+    }, { returnOriginal: false });
     req.session.currentUser = user;
     return res.json(user);
   } catch (error) {

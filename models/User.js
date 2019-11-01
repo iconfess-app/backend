@@ -4,10 +4,10 @@ const { Schema } = mongoose;
 
 const userSchema = new Schema(
   {
-    username: { type: String, required: true, unique: true },
+    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     hashedPassword: { type: String, required: true },
-    isOver16: { type: Boolean, required: true, default: false },
+    isOver16: { type: Boolean, required: true },
     userConfessions: [{ type: Schema.Types.ObjectId, ref: 'Confession' }],
     allowsLocation: { type: Boolean, default: false },
     allowsContact: { type: Boolean, default: false },
