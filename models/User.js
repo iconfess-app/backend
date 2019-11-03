@@ -11,7 +11,7 @@ const userSchema = new Schema(
     userConfessions: [{ type: Schema.Types.ObjectId, ref: 'Confession' }],
     allowsLocation: { type: Boolean, default: false },
     allowsContact: { type: Boolean, default: false },
-    darkMode: { type: Boolean, default: true },
+    lightMode: { type: Boolean, default: false },
     avatar: { type: String, default: 'https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_960_720.png' },
   },
   {

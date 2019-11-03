@@ -5,7 +5,7 @@ const { checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
 const Confession = require('../models/Confession');
 
-router.get('/home', async (req, res, next) => {
+router.get('/home', checkIfLoggedIn, async (req, res, next) => {
   try {
     const allConfessions = await Confession.find().populate('user');
     return res.json(allConfessions);

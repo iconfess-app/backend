@@ -92,7 +92,7 @@ router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
     age,
     allowsLocation,
     allowsContact,
-    darkMode,
+    lightMode,
     avatar,
   } = req.body;
   const { _id } = req.session.currentUser;
@@ -104,7 +104,7 @@ router.put('/edit', checkIfLoggedIn, async (req, res, next) => {
       age,
       allowsLocation,
       allowsContact,
-      darkMode,
+      lightMode,
       avatar,
     }, { returnOriginal: false });
     req.session.currentUser = user;
