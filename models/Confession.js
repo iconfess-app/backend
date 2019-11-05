@@ -10,7 +10,7 @@ const confessionSchema = new Schema(
     date: { type: String },
     time: { type: String },
     user: { type: Schema.Types.ObjectId, ref: "User" },
-    likesCounter: { type: Number, default: 0 }
+    likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
   {
     timestamps: {
