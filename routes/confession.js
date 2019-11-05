@@ -45,6 +45,19 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
+router.patch('/confessions/:confessionId/update', checkIfLoggedIn, async (req, res, next) => {
+  const { likesCounter } = req.body;
+  const { confessionId } = req.params;
+  try {
+    const updatedConfession = await Confession.findByIdAndUpdate({ _id: confessionId }, {
+      likesCounter,
+    }, { returnOriginal: false });
+    return res.json(updatedConfession);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
   try {
     const { _id } = req.session.currentUser;
