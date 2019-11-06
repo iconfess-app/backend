@@ -45,14 +45,14 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.patch('/confessions/:confessionId/update', checkIfLoggedIn, async (req, res, next) => {
-  const { likesCounter } = req.body;
+router.post('/confessions/:confessionId/like', checkIfLoggedIn, async (req, res, next) => {
+  const user = req.session.currentUser;
   const { confessionId } = req.params;
   try {
-    const updatedConfession = await Confession.findByIdAndUpdate({ _id: confessionId }, {
-      likesCounter,
-    }, { returnOriginal: false });
-    return res.json(updatedConfession);
+    const likedConfession = await Confession.findByIdAndUpdate({ _id: confessionId }, {
+      $push: { likes: user._id },
+    }, { new: true });
+    return res.json(likedConfession);
   } catch (error) {
     next(error);
   }
@@ -69,15 +69,15 @@ router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
-  try {
-    const { confessionId } = req.params;
-    const confession = await Confession.findOne({ _id: confessionId }).populate('user');
-    return res.json(confession);
-  } catch (error) {
-    next(error);
-  }
-});
+// router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
+//   try {
+//     const { confessionId } = req.params;
+//     const confession = await Confession.findOne({ _id: confessionId }).populate('user');
+//     return res.json(confession);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
   try {
