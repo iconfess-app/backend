@@ -58,6 +58,19 @@ router.post('/confessions/:confessionId/like', checkIfLoggedIn, async (req, res,
   }
 });
 
+router.post('/confessions/:confessionId/unlike', checkIfLoggedIn, async (req, res, next) => {
+  const user = req.session.currentUser;
+  const { confessionId } = req.params;
+  try {
+    const likedConfession = await Confession.findByIdAndUpdate({ _id: confessionId }, {
+      $pull: { likes: user._id },
+    }, { new: true });
+    return res.json(likedConfession);
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
   try {
     const { _id } = req.session.currentUser;
@@ -69,15 +82,15 @@ router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-// router.get('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
-//   try {
-//     const { confessionId } = req.params;
-//     const confession = await Confession.findOne({ _id: confessionId }).populate('user');
-//     return res.json(confession);
-//   } catch (error) {
-//     next(error);
-//   }
-// });
+router.get('/confessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
+  try {
+    const { confessionId } = req.params;
+    const confession = await Confession.findOne({ _id: confessionId });
+    return res.json(confession);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
   try {
@@ -95,3 +108,5 @@ router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, 
 });
 
 module.exports = router;
+
+
