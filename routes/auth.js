@@ -1,4 +1,4 @@
-/* eslint-disable consistent-return */
+
 const express = require('express');
 const bcrypt = require('bcrypt');
 const {
@@ -10,11 +10,11 @@ const User = require('../models/User');
 const bcryptSalt = 10;
 const router = express.Router();
 
-router.get('/me', (req, res, next) => {
+router.get("/me", (req, res, next) => {
   if (req.session.currentUser) {
     res.status(200).json(req.session.currentUser);
   } else {
-    res.status(401).json({ code: 'unauthorized' });
+    res.status(401).json({ code: "unauthorized" });
   }
 });
 
@@ -75,8 +75,8 @@ router.post('/login', checkUsernameAndPasswordNotEmpty, async (req, res, next) =
   }
 });
 
-router.get('/logout', (req, res, next) => {
-  req.session.destroy((err) => {
+router.get("/logout", (req, res, next) => {
+  req.session.destroy(err => {
     if (err) {
       next(err);
     }
