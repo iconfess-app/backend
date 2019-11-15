@@ -107,6 +107,17 @@ router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, 
   }
 });
 
+router.post('/confessions/:confessionId/report', checkIfLoggedIn, async (req, res, next) => {
+  const user = req.session.currentUser;
+  const { confessionId } = req.params;
+  try {
+    const reportedConfession = await Confession.findByIdAndUpdate({ _id: confessionId }, {
+      $push: { reported: user._id },
+    }, { new: true, returnOriginal: false });
+    return res.json(reportedConfession);
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
-
-

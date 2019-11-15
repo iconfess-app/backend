@@ -9,6 +9,7 @@ const confessionSchema = new Schema(
     isDestroyed: { type: Boolean, default: true },
     date: { type: String },
     time: { type: String },
+    reported: [{ type: Schema.Types.ObjectId, ref: "User" }],
     user: { type: Schema.Types.ObjectId, ref: "User" },
     likes: [{ type: Schema.Types.ObjectId, ref: "User" }],
   },
