@@ -19,7 +19,6 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
     description, category, isDestroyed,
   } = req.body;
   const user = req.session.currentUser._id;
-  // Això m'agradaria endur-m'ho a un helper extern
   const d = new Date();
   const date = d.toJSON().slice(0, 10).replace(/-/g, '-');
   const hours = d.getHours();
