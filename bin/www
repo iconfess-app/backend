@@ -9,8 +9,8 @@ let debug = require('debug')('http:server');
 let http = require('http');
 let socketIo = require('socket.io');
 let app = require('../app');
+let express = require('express');
 let Chat = require('../models/Chat');
-let mongoose = require('mongoose');
 
 /**
  * Get port from environment and store in Express.
@@ -25,11 +25,24 @@ app.set('port', port);
 
 let server = http.createServer(app);
 let io = socketIo(server);
+let users = {};
 
 io.on('connection', (socket) => {
   console.log('Socket connected');
   socket.on('greet', (greeting) => {
     console.log(greeting);
+  });
+  socket.on('Input Chat Message', (msg) => {
+    console.log(msg);
+    let chat = new Chat({ message: msg.chatMessage, sender: msg.userId, type: msg.type })
+    chat.save((err, doc) => {
+      if (err){
+        return res.json({ success: false, err })
+      }
+    Chat.find({ "_id": doc._id }).populate("sender").exec((err, doc) => { 
+      return io.emit("Output Chat Message", doc);
+      })
+    })
   });
 });
 
