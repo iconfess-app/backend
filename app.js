@@ -6,12 +6,17 @@ const mongoose = require('mongoose');
 const session = require('express-session');
 const MongoStore = require('connect-mongo')(session);
 const cors = require('cors')({ origin: true, credentials: true });
+// const socketIo = require('socket.io');
+// const server = require('./bin/www');
+
+// const io = socketIo(server);
+
 require('dotenv').config();
 
 mongoose.set('useCreateIndex', true);
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false
+    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false,
   })
   .then(() => {
     console.log('connected to: ', process.env.MONGO_URL);
