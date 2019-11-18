@@ -1,12 +1,16 @@
-#!/usr/bin/env node
+/* eslint-disable arrow-parens */
+// #!/usr/bin / env node
 
 /**
  * Module dependencies.
  */
 
-let app = require('../app');
 let debug = require('debug')('http:server');
 let http = require('http');
+let socketIo = require('socket.io');
+let app = require('../app');
+let express = require('express');
+let Chat = require('../models/Chat');
 
 /**
  * Get port from environment and store in Express.
@@ -20,6 +24,26 @@ app.set('port', port);
  */
 
 let server = http.createServer(app);
+let io = socketIo(server);
+let users = {};
+
+io.on('connection', (socket) => {
+  console.log('Socket connected');
+  socket.on('greet', (greeting) => {
+    console.log(greeting);
+  });
+  socket.on('Input Chat Message', (msg) => {
+    let chat = new Chat({ message: msg.chatMessage, sender: msg.userId, type: msg.type })
+    chat.save((err, doc) => {
+      if (err){
+        return res.json({ success: false, err })
+      }
+    Chat.find({ "_id": doc._id }).populate("sender").exec((err, doc) => { 
+      return io.emit("Output Chat Message", doc);
+      })
+    })
+  });
+});
 
 /**
  * Listen on provided port, on all network interfaces.
@@ -58,16 +82,16 @@ function onError(error) {
     throw error;
   }
 
-  let bind = typeof port === 'string' ? `Pipe ${  port}` : `Port ${  port}`;
+  let bind = typeof port === 'string' ? `Pipe ${port}` : `Port ${port}`;
 
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error(`${bind  } requires elevated privileges`);
+      console.error(`${bind} requires elevated privileges`);
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error(`${bind  } is already in use`);
+      console.error(`${bind} is already in use`);
       process.exit(1);
       break;
     default:
@@ -81,6 +105,6 @@ function onError(error) {
 
 function onListening() {
   let addr = server.address();
-  let bind = typeof addr === 'string' ? `pipe ${  addr}` : `port ${  addr.port}`;
-  debug(`Listening on ${  bind}`);
+  let bind = typeof addr === 'string' ? `pipe ${addr}` : `port ${addr.port}`;
+  debug(`Listening on ${bind}`);
 }
