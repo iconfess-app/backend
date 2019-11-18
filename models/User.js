@@ -12,7 +12,7 @@ const userSchema = new Schema(
     allowsLocation: { type: Boolean, default: false },
     allowsContact: { type: Boolean, default: false },
     lightMode: { type: Boolean, default: false },
-    avatar: { type: String, default: 'https://cdn.pixabay.com/photo/2016/08/20/05/38/avatar-1606916_960_720.png' },
+    avatar: { type: String, default: 'https://iconfess.netlify.com/images/avatar1.svg' },
     token: { type: String },
     tokenExp: { type: Number },
   },
