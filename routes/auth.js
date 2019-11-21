@@ -3,7 +3,7 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const {
   checkUsernameAndPasswordNotEmpty,
-  checkIfLoggedIn
+  checkIfLoggedIn,
 } = require('../middlewares');
 const User = require('../models/User');
 
@@ -75,8 +75,8 @@ router.post('/login', checkUsernameAndPasswordNotEmpty, async (req, res, next) =
   }
 });
 
-router.get("/logout", (req, res, next) => {
-  req.session.destroy(err => {
+router.get('/logout', (req, res, next) => {
+  req.session.destroy((err) => {
     if (err) {
       next(err);
     }
