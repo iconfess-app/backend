@@ -24,7 +24,6 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   const hours = d.getHours();
   const minutes = d.getMinutes();
   const time = `${hours}:${minutes}`;
-
   if (description === '' || category === '') {
     res.status(404).json({ code: 'Fill all fields before submitting' });
   } else {
@@ -32,7 +31,8 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
       const newConfession = await Confession.create(
         {
           description, date, time, category, isDestroyed, user,
-        });
+        },
+      );
       const userUpdate = await User.findByIdAndUpdate(user, {
         $push: { userConfessions: newConfession._id },
       }, { new: true }).populate('userConfessions');
