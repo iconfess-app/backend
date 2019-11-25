@@ -1,11 +1,11 @@
 const express = require('express');
 
 const router = express.Router();
-const { checkIfLoggedIn } = require('../middlewares');
+// const { checkIfLoggedIn } = require('../middlewares');
 const User = require('../models/User');
 const Confession = require('../models/Confession');
 
-router.get('/home', checkIfLoggedIn, async (req, res, next) => {
+router.get('/home', async (req, res, next) => {
   try {
     const allConfessions = await Confession.find().populate('user');
     return res.json(allConfessions);
@@ -14,7 +14,7 @@ router.get('/home', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
+router.post('/confess', async (req, res, next) => {
   const {
     description, category, isDestroyed,
   } = req.body;
@@ -44,7 +44,7 @@ router.post('/confess', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.post('/confessions/:confessionId/like', checkIfLoggedIn, async (req, res, next) => {
+router.post('/confessions/:confessionId/like', async (req, res, next) => {
   const user = req.session.currentUser;
   const { confessionId } = req.params;
   try {
@@ -57,7 +57,7 @@ router.post('/confessions/:confessionId/like', checkIfLoggedIn, async (req, res,
   }
 });
 
-router.post('/confessions/:confessionId/unlike', checkIfLoggedIn, async (req, res, next) => {
+router.post('/confessions/:confessionId/unlike', async (req, res, next) => {
   const user = req.session.currentUser;
   const { confessionId } = req.params;
   try {
@@ -70,7 +70,7 @@ router.post('/confessions/:confessionId/unlike', checkIfLoggedIn, async (req, re
   }
 });
 
-router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
+router.get('/myconfessions', async (req, res, next) => {
   try {
     const { _id } = req.session.currentUser;
     const user = await User.findOne({ _id }).populate('userConfessions');
@@ -81,7 +81,7 @@ router.get('/myconfessions', checkIfLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/confessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
+router.get('/confessions/:confessionId', async (req, res, next) => {
   try {
     const { confessionId } = req.params;
     const confession = await Confession.findOne({ _id: confessionId });
@@ -91,7 +91,7 @@ router.get('/confessions/:confessionId', checkIfLoggedIn, async (req, res, next)
   }
 });
 
-router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, next) => {
+router.delete('/myconfessions/:confessionId', async (req, res, next) => {
   try {
     const { confessionId } = req.params;
     const { _id } = req.session.currentUser;
@@ -106,7 +106,7 @@ router.delete('/myconfessions/:confessionId', checkIfLoggedIn, async (req, res, 
   }
 });
 
-router.post('/confessions/:confessionId/report', checkIfLoggedIn, async (req, res, next) => {
+router.post('/confessions/:confessionId/report', async (req, res, next) => {
   const user = req.session.currentUser;
   const { confessionId } = req.params;
   try {

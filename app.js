@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -31,6 +33,10 @@ const app = express();
 app.set('trust proxy', true);
 app.use(cors);
 app.options('*', cors);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());
