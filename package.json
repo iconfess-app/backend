@@ -1,5 +1,5 @@
 {
-  "name": "http",
+  "name": "iconfess-backend",
   "version": "0.0.0",
   "private": true,
   "scripts": {
@@ -7,6 +7,10 @@
     "start:dev": "nodemon ./bin/www",
     "seed": "node ./bin/seed.js",
     "eslint": "eslint --init"
+  },
+  "engines": {
+    "npm": "^6.11.3",
+    "node": "^10.16.0"
   },
   "dependencies": {
     "bcrypt": "^3.0.6",

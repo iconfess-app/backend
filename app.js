@@ -1,3 +1,5 @@
+/* eslint-disable prefer-arrow-callback */
+/* eslint-disable func-names */
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -12,7 +14,8 @@ require('dotenv').config();
 mongoose.set('useCreateIndex', true);
 mongoose
   .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false,
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
   })
   .then(() => {
     console.log('connected to: ', process.env.MONGO_URL);
@@ -20,7 +23,7 @@ mongoose
   .catch((error) => {
     console.error(error);
   });
-
+// useFindAndModify: false,
 const authRouter = require('./routes/auth');
 const confessionRouter = require('./routes/confession');
 const chatRouter = require('./routes/chats');
@@ -30,6 +33,10 @@ const app = express();
 app.set('trust proxy', true);
 app.use(cors);
 app.options('*', cors);
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  next();
+});
 
 app.use(logger('dev'));
 app.use(express.json());

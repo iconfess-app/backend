@@ -1,31 +1,29 @@
-/* eslint-disable arrow-parens */
-// #!/usr/bin / env node
+#!/usr/bin / env node
 
 /**
  * Module dependencies.
  */
 
-let debug = require('debug')('http:server');
-let http = require('http');
-let socketIo = require('socket.io');
-let app = require('../app');
-let express = require('express');
-let Chat = require('../models/Chat');
+var debug = require('debug')('http:server');
+var http = require('http');
+var socketIo = require('socket.io');
+var app = require('../app');
+var express = require('express');
+var Chat = require('../models/Chat');
 
 /**
  * Get port from environment and store in Express.
  */
 
-let port = normalizePort(process.env.PORT || '3001');
+var port = normalizePort(process.env.PORT || '3001');
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-let server = http.createServer(app);
-let io = socketIo(server);
-let users = {};
+var server = http.createServer(app);
+var io = socketIo(server);
 
 io.on('connection', (socket) => {
   console.log('Socket connected');
