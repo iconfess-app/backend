@@ -31,10 +31,10 @@ const chatRouter = require('./routes/chats');
 const app = express();
 
 const corsOptions = {
-  origin: /\.iconfess.netlify\.com$/,
-  methods: 'GET,HEAD,POST,PUT,DELETE,OPTIONS',
+  origin: '*',
+  methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS",
   credentials: true,
-  allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
+  allowedHeaders: "Content-Type, Authorization, X-Requested-With",
 };
 
 app.set('trust proxy', true);
