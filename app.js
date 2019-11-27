@@ -30,9 +30,17 @@ const chatRouter = require('./routes/chats');
 
 const app = express();
 
+const corsOptions = {
+  origin: /\.iconfess.netlify\.com$/,
+  methods: 'GET,HEAD,POST,PUT,DELETE,OPTIONS',
+  credentials: true,
+  allowedHeaders: 'Content-Type, Authorization, X-Requested-With',
+};
+
 app.set('trust proxy', true);
 app.use(cors);
-app.options('*', cors);
+// app.options('*', cors);
+app.options('*', cors(corsOptions));
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -52,8 +60,7 @@ app.use(
     cookie: {
       maxAge: 24 * 60 * 60 * 1000,
       sameSite: 'none',
-      secure: true,
-      // secure: process.env.NODE_ENV === 'production',
+      secure: process.env.NODE_ENV === 'production',
     },
   }),
 );
