@@ -30,17 +30,9 @@ const chatRouter = require('./routes/chats');
 
 const app = express();
 
-const corsOptions = {
-  origin: '*',
-  methods: "GET,HEAD,POST,PATCH,DELETE,OPTIONS",
-  credentials: true,
-  allowedHeaders: "Content-Type, Authorization, X-Requested-With",
-};
-
 app.set('trust proxy', true);
 app.use(cors);
-// app.options('*', cors);
-app.options('*', cors(corsOptions));
+app.options('*', cors);
 
 app.use(logger('dev'));
 app.use(express.json());
