@@ -32,5 +32,6 @@
     "eslint-plugin-import": "^2.18.2",
     "faker": "^4.1.0",
     "nodemon": "^1.19.4"
-  }
+  },
+  "proxy": "https://iconfess.netlify.com/"
 }
