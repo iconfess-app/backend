@@ -66,6 +66,12 @@ app.use('/', authRouter);
 app.use('/', confessionRouter);
 app.use('/', chatRouter);
 
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Origin', 'https://iconfess.netlify.com/');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
+
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
   res.status(404).json({ code: 'not found' });
@@ -79,12 +85,6 @@ app.use((err, req, res, next) => {
   if (!res.headersSent) {
     res.status(500).json({ code: 'unexpected' });
   }
-});
-
-app.use(function (req, res, next) {
-  res.header('Access-Control-Allow-Origin', 'https://iconfess.netlify.com/');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
 });
 
 module.exports = app;
